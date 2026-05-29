@@ -1,6 +1,6 @@
 ﻿namespace HikoukiApi.Models
 {
-    public class TypeCode
+    public class AircraftTypeCode
     {
         public int Id { get; set; }
         public required string Icao { get; set; }
