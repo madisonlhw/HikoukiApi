@@ -1,0 +1,6 @@
+@HikoukiApi_HostAddress = http://localhost:5211
+
+GET {{HikoukiApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
