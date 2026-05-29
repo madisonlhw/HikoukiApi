@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HikoukiApi.Migrations
 {
     [DbContext(typeof(HikoukiDbContext))]
-    [Migration("20260529055354_InitialCreate")]
+    [Migration("20260529061042_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -28,48 +28,58 @@ namespace HikoukiApi.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Icao")
                         .IsRequired()
                         .HasMaxLength(4)
-                        .HasColumnType("character varying(4)");
+                        .HasColumnType("character varying(4)")
+                        .HasColumnName("icao");
 
                     b.Property<string>("Manufacturer")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("manufacturer");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_aircraft_type_codes");
 
                     b.HasIndex("Icao")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_aircraft_type_codes_icao");
 
-                    b.ToTable("AircraftTypeCodes");
+                    b.ToTable("aircraft_type_codes", (string)null);
                 });
 
             modelBuilder.Entity("HikoukiApi.Models.TypeCodeVariant", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AircraftTypeCodeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("aircraft_type_code_id");
 
                     b.Property<string>("VariantName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("variant_name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_type_code_variants");
 
                     b.HasIndex("AircraftTypeCodeId", "VariantName")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_type_code_variants_aircraft_type_code_id_variant_name");
 
-                    b.ToTable("TypeCodeVariants");
+                    b.ToTable("type_code_variants", (string)null);
                 });
 
             modelBuilder.Entity("HikoukiApi.Models.TypeCodeVariant", b =>
@@ -78,7 +88,8 @@ namespace HikoukiApi.Migrations
                         .WithMany("ModelVariants")
                         .HasForeignKey("AircraftTypeCodeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_type_code_variants_aircraft_type_codes_aircraft_type_code_id");
                 });
 
             modelBuilder.Entity("HikoukiApi.Models.AircraftTypeCode", b =>
