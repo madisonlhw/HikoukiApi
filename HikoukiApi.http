@@ -3,4 +3,32 @@
 GET {{HikoukiApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
-###
+### Get all AircraftTypeCodes
+GET {{HikoukiApi_HostAddress}}/aircrafttypecodes
+Accept: application/json
+
+### Get specific AircraftTypeCode
+GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
+Accept: application/json
+
+### Create new AircraftTypeCode
+POST {{HikoukiApi_HostAddress}}/aircrafttypecodes
+Content-Type: application/json
+
+{
+  "icao": "B737",
+  "manufacturer": "Boeing"
+}
+
+### Update AircraftTypeCode
+PUT {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "icao": "B737-800",
+  "manufacturer": "Boeing"
+}
+
+### Delete AircraftTypeCode
+DELETE {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
