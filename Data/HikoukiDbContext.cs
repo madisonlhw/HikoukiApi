@@ -11,7 +11,7 @@ namespace HikoukiApi.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(HikoukiDbContext).Assembly);
         }
 
-        public DbSet<AircraftTypeCode> AircraftTypeCodes { get; set; }
-        public DbSet<TypeCodeVariant> TypeCodeVariants { get; set; }
+        public DbSet<AircraftTypeCode> AircraftTypeCodes => Set<AircraftTypeCode>();
+        public DbSet<TypeCodeVariant> TypeCodeVariants => Set<TypeCodeVariant>();
     }
 }
