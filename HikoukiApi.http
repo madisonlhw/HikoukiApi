@@ -1,34 +1,130 @@
 @HikoukiApi_HostAddress = http://localhost:5211
 
-GET {{HikoukiApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-### Get all AircraftTypeCodes
+### AircraftTypeCodes — list all
 GET {{HikoukiApi_HostAddress}}/aircrafttypecodes
 Accept: application/json
 
-### Get specific AircraftTypeCode
+### AircraftTypeCodes — get one
 GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
 Accept: application/json
 
-### Create new AircraftTypeCode
+### AircraftTypeCodes — create
 POST {{HikoukiApi_HostAddress}}/aircrafttypecodes
 Content-Type: application/json
 
 {
-  "icao": "B737",
+  "icao": "B738",
   "manufacturer": "Boeing"
 }
 
-### Update AircraftTypeCode
+### AircraftTypeCodes — update
 PUT {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
 Content-Type: application/json
 
 {
   "id": 1,
-  "icao": "B737-800",
+  "icao": "B739",
   "manufacturer": "Boeing"
 }
 
-### Delete AircraftTypeCode
+### AircraftTypeCodes — delete
 DELETE {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
+
+### Variants — list all for a parent
+GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/3/variants
+Accept: application/json
+
+### Variants — get one
+GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
+Accept: application/json
+
+### Variants — create
+POST {{HikoukiApi_HostAddress}}/aircrafttypecodes/3/variants
+Content-Type: application/json
+
+{
+  "variantName": "737-800WL"
+}
+
+### Variants — update
+PUT {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
+Content-Type: application/json
+
+{
+  "variantName": "737-900"
+}
+
+### Variants — delete
+DELETE {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
+
+### Airports — list all
+GET {{HikoukiApi_HostAddress}}/airports
+Accept: application/json
+
+### Airports — get one
+GET {{HikoukiApi_HostAddress}}/airports/1
+Accept: application/json
+
+### Airports — create
+POST {{HikoukiApi_HostAddress}}/airports
+Content-Type: application/json
+
+{
+  "iata": "LCK",
+  "icao": "KLCK",
+  "name": "Rickenbacker International Airport",
+  "alternateName": null,
+  "country": "US"
+}
+
+### Airports — update
+PUT {{HikoukiApi_HostAddress}}/airports/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "iata": "LCK",
+  "icao": "KLCK",
+  "name": "Rickenbacker Intl",
+  "alternateName": "Rickenbacker ANGB",
+  "country": "US"
+}
+
+### Airports — delete
+DELETE {{HikoukiApi_HostAddress}}/airports/1
+
+### Airlines — list all
+GET {{HikoukiApi_HostAddress}}/airlines
+Accept: application/json
+
+### Airlines — get one
+GET {{HikoukiApi_HostAddress}}/airlines/1
+Accept: application/json
+
+### Airlines — create
+POST {{HikoukiApi_HostAddress}}/airlines
+Content-Type: application/json
+
+{
+  "iata": "AA",
+  "icao": "AAL",
+  "name": "American Airlines",
+  "country": "US",
+  "isActive": true
+}
+
+### Airlines — update
+PUT {{HikoukiApi_HostAddress}}/airlines/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "iata": "AA",
+  "icao": "AAL",
+  "name": "American Airlines",
+  "country": "US",
+  "isActive": true
+}
+
+### Airlines — delete
+DELETE {{HikoukiApi_HostAddress}}/airlines/1

@@ -12,6 +12,8 @@ namespace HikoukiApi.Data
         }
 
         public DbSet<AircraftTypeCode> AircraftTypeCodes => Set<AircraftTypeCode>();
+        public DbSet<Airline> Airlines => Set<Airline>();
+        public DbSet<Airport> Airports => Set<Airport>();
         public DbSet<TypeCodeVariant> TypeCodeVariants => Set<TypeCodeVariant>();
     }
 }

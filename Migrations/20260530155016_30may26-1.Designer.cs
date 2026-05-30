@@ -2,6 +2,7 @@
 using HikoukiApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HikoukiApi.Migrations
 {
     [DbContext(typeof(HikoukiDbContext))]
-    partial class HikoukiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260530155016_30may26-1")]
+    partial class _30may261
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,12 +63,6 @@ namespace HikoukiApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)")
-                        .HasColumnName("country");
-
                     b.Property<string>("Iata")
                         .HasMaxLength(2)
                         .HasColumnType("character varying(2)")
@@ -104,12 +101,6 @@ namespace HikoukiApi.Migrations
                     b.Property<string>("AlternateName")
                         .HasColumnType("text")
                         .HasColumnName("alternate_name");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)")
-                        .HasColumnName("country");
 
                     b.Property<string>("Iata")
                         .HasMaxLength(3)
