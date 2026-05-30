@@ -1,6 +1,6 @@
-﻿namespace HikoukiApi.Models
+﻿namespace HikoukiApi.Dtos
 {
-    public class Airline
+    public class AirlineResponse
     {
         public int Id { get; set; }
         public string? Iata { get; set; }
@@ -8,6 +8,5 @@
         public required string Name { get; set; }
         public required string Country { get; set; }
         public bool IsActive { get; set; } = true;
-        public ICollection<Aircraft> Fleet { get; set; } = [];
     }
 }

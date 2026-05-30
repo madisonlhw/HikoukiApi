@@ -11,6 +11,7 @@ namespace HikoukiApi.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(HikoukiDbContext).Assembly);
         }
 
+        public DbSet<Aircraft> Airplanes => Set<Aircraft>();
         public DbSet<AircraftTypeCode> AircraftTypeCodes => Set<AircraftTypeCode>();
         public DbSet<Airline> Airlines => Set<Airline>();
         public DbSet<Airport> Airports => Set<Airport>();

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HikoukiApi.Models;
 using HikoukiApi.Data;
+using HikoukiApi.Dtos;
 
 namespace HikoukiApi.Controllers
 {
@@ -35,31 +36,18 @@ namespace HikoukiApi.Controllers
         // PUT: api/AircraftTypeCode/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAircraftTypeCode(int? id, AircraftTypeCode aircrafttypecode)
+        public async Task<IActionResult> PutAircraftTypeCode(int id, CreateAircraftTypeCodeRequest request)
         {
-            if (id != aircrafttypecode.Id)
+            AircraftTypeCode? existingTypeCode = await _context.AircraftTypeCodes.FindAsync(id);
+            if (existingTypeCode == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(aircrafttypecode).State = EntityState.Modified;
+            existingTypeCode.Icao = request.Icao;
+            existingTypeCode.Manufacturer = request.Manufacturer;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AircraftTypeCodeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
