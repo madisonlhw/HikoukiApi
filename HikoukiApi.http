@@ -1,14 +1,80 @@
 @HikoukiApi_HostAddress = http://localhost:5211
 
-### AircraftTypeCodes — list all
+###############################################
+# Aircraft
+###############################################
+
+### List all aircraft
+GET {{HikoukiApi_HostAddress}}/aircraft
+Accept: application/json
+
+### Get one aircraft by id
+GET {{HikoukiApi_HostAddress}}/aircraft/1
+Accept: application/json
+
+### Create an aircraft (minimal — required fields only)
+POST {{HikoukiApi_HostAddress}}/aircraft
+Content-Type: application/json
+
+{
+  "registration": "N12345",
+  "aircraftTypeCodeId": 1,
+  "serialNumber": "12345"
+}
+
+### Create an aircraft (full — optional fields included)
+POST {{HikoukiApi_HostAddress}}/aircraft
+Content-Type: application/json
+
+{
+  "registration": "N67890",
+  "aircraftTypeCodeId": 2,
+  "typeCodeVariantId": 1,
+  "serialNumber": "67890",
+  "lineNumber": "0420",
+  "airlineId": 1,
+  "alternateOperatorName": "Wet-leased operator",
+  "isGovOrMilitary": false,
+  "isSpecialLivery": true,
+  "specialLiveryName": "Retro livery",
+  "remarks": "Test airframe"
+}
+
+### Update an aircraft (full replace — send the whole editable set; no id in body)
+PUT {{HikoukiApi_HostAddress}}/aircraft/2
+Content-Type: application/json
+
+{
+  "registration": "N12345",
+  "aircraftTypeCodeId": 3,
+  "typeCodeVariantId": null,
+  "serialNumber": "12345",
+  "lineNumber": null,
+  "airlineId": null,
+  "alternateOperatorName": null,
+  "isGovOrMilitary": false,
+  "isSpecialLivery": false,
+  "specialLiveryName": null,
+  "remarks": "Updated via PUT"
+}
+
+### Delete an aircraft
+DELETE {{HikoukiApi_HostAddress}}/aircraft/1
+
+
+###############################################
+# Aircraft type codes
+###############################################
+
+### List all type codes
 GET {{HikoukiApi_HostAddress}}/aircrafttypecodes
 Accept: application/json
 
-### AircraftTypeCodes — get one
+### Get one type code by id
 GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
 Accept: application/json
 
-### AircraftTypeCodes — create
+### Create a type code
 POST {{HikoukiApi_HostAddress}}/aircrafttypecodes
 Content-Type: application/json
 
@@ -17,45 +83,54 @@ Content-Type: application/json
   "manufacturer": "Boeing"
 }
 
-### AircraftTypeCodes — update
+### Update a type code (this controller still binds the entity, so the body carries id)
 PUT {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
 Content-Type: application/json
 
 {
   "id": 1,
-  "icao": "B739",
+  "icao": "B738",
   "manufacturer": "Boeing"
 }
 
-### AircraftTypeCodes — delete
+### Delete a type code
 DELETE {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
 
-### Variants — list all for a parent
-GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/3/variants
+
+###############################################
+# Type code variants (nested under a type code)
+###############################################
+
+### List variants for a type code
+GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants
 Accept: application/json
 
-### Variants — get one
+### Get one variant
 GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
 Accept: application/json
 
-### Variants — create
-POST {{HikoukiApi_HostAddress}}/aircrafttypecodes/3/variants
+### Create a variant under a type code
+POST {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants
 Content-Type: application/json
 
 {
-  "variantName": "737-800WL"
+  "variantName": "800"
 }
 
-### Variants — update
+### Update a variant (id and parent come from the route, not the body)
 PUT {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
 Content-Type: application/json
 
 {
-  "variantName": "737-900"
+  "variantName": "800ER"
 }
 
-### Variants — delete
+### Delete a variant
 DELETE {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
+
+###############################################
+# Airports
+###############################################
 
 ### Airports — list all
 GET {{HikoukiApi_HostAddress}}/airports
@@ -92,39 +167,3 @@ Content-Type: application/json
 
 ### Airports — delete
 DELETE {{HikoukiApi_HostAddress}}/airports/1
-
-### Airlines — list all
-GET {{HikoukiApi_HostAddress}}/airlines
-Accept: application/json
-
-### Airlines — get one
-GET {{HikoukiApi_HostAddress}}/airlines/1
-Accept: application/json
-
-### Airlines — create
-POST {{HikoukiApi_HostAddress}}/airlines
-Content-Type: application/json
-
-{
-  "iata": "AA",
-  "icao": "AAL",
-  "name": "American Airlines",
-  "country": "US",
-  "isActive": true
-}
-
-### Airlines — update
-PUT {{HikoukiApi_HostAddress}}/airlines/1
-Content-Type: application/json
-
-{
-  "id": 1,
-  "iata": "AA",
-  "icao": "AAL",
-  "name": "American Airlines",
-  "country": "US",
-  "isActive": true
-}
-
-### Airlines — delete
-DELETE {{HikoukiApi_HostAddress}}/airlines/1
