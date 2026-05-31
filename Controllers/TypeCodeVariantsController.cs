@@ -18,23 +18,24 @@ namespace HikoukiApi.Controllers
 
         // GET: api/TypeCodeVariant
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TypeCodeVariant>>> GetTypeCodeVariant(int aircraftTypeCodeId)
+        public async Task<ActionResult<IEnumerable<TypeCodeVariantResponse>>> GetTypeCodeVariant(int aircraftTypeCodeId)
         {
-            return await _context.TypeCodeVariants.Where(x => x.AircraftTypeCodeId == aircraftTypeCodeId).ToListAsync();
+            var variants = await _context.TypeCodeVariants.Where(x => x.AircraftTypeCodeId == aircraftTypeCodeId).ToListAsync();
+            return variants.Select(HikoukiResponse.ToResponse).ToList();
         }
 
         // GET: api/TypeCodeVariant/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TypeCodeVariant>> GetTypeCodeVariant(int id, int aircraftTypeCodeId)
+        public async Task<ActionResult<TypeCodeVariantResponse>> GetTypeCodeVariant(int id, int aircraftTypeCodeId)
         {
-            var typecodevariant = await _context.TypeCodeVariants.FindAsync(id);
+            var typecodevariant = await _context.TypeCodeVariants.FirstOrDefaultAsync(a => a.Id == id);
 
             if (typecodevariant == null || typecodevariant.AircraftTypeCodeId != aircraftTypeCodeId)
             {
                 return NotFound();
             }
 
-            return typecodevariant;
+            return HikoukiResponse.ToResponse(typecodevariant);
         }
 
         // PUT: api/TypeCodeVariant/5
@@ -56,7 +57,7 @@ namespace HikoukiApi.Controllers
         // POST: api/TypeCodeVariant
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TypeCodeVariant>> PostTypeCodeVariant(int aircraftTypeCodeId, CreateTypeCodeVariantRequest request)
+        public async Task<ActionResult<TypeCodeVariantResponse>> PostTypeCodeVariant(int aircraftTypeCodeId, CreateTypeCodeVariantRequest request)
         {
             TypeCodeVariant newVariant = new()
             {
@@ -67,12 +68,12 @@ namespace HikoukiApi.Controllers
             _context.TypeCodeVariants.Add(newVariant);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTypeCodeVariant", new { aircraftTypeCodeId, id = newVariant.Id }, newVariant);
+            return CreatedAtAction("GetTypeCodeVariant", new { aircraftTypeCodeId, id = newVariant.Id }, HikoukiResponse.ToResponse(newVariant));
         }
 
         // DELETE: api/TypeCodeVariant/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTypeCodeVariant(int? id, int aircraftTypeCodeId)
+        public async Task<IActionResult> DeleteTypeCodeVariant(int id, int aircraftTypeCodeId)
         {
             var typecodevariant = await _context.TypeCodeVariants.FindAsync(id);
             if (typecodevariant == null || typecodevariant.AircraftTypeCodeId != aircraftTypeCodeId)
@@ -84,11 +85,6 @@ namespace HikoukiApi.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool TypeCodeVariantExists(int? id)
-        {
-            return _context.TypeCodeVariants.Any(e => e.Id == id);
         }
     }
 }

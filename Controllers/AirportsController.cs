@@ -2,98 +2,98 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HikoukiApi.Models;
 using HikoukiApi.Data;
+using HikoukiApi.Dtos;
 
-[Route("[controller]")]
-[ApiController]
-public class AirportsController : ControllerBase
+namespace HikoukiApi.Controllers
 {
-    private readonly HikoukiDbContext _context;
-    public AirportsController(HikoukiDbContext context)
+    [Route("[controller]")]
+    [ApiController]
+    public class AirportsController : ControllerBase
     {
-        _context = context;
-    }
-
-    // GET: api/Airport
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Airport>>> GetAirport()
-    {
-        return await _context.Airports.ToListAsync();
-    }
-
-    // GET: api/Airport/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Airport>> GetAirport(int id)
-    {
-        var airport = await _context.Airports.FindAsync(id);
-
-        if (airport == null)
+        private readonly HikoukiDbContext _context;
+        public AirportsController(HikoukiDbContext context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        return airport;
-    }
-
-    // PUT: api/Airport/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutAirport(int? id, Airport airport)
-    {
-        if (id != airport.Id)
+        // GET: api/Airport
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<AirportResponse>>> GetAirport()
         {
-            return BadRequest();
+            var airports = await _context.Airports.ToListAsync();
+
+            return airports.Select(HikoukiResponse.ToResponse).ToList();
         }
 
-        _context.Entry(airport).State = EntityState.Modified;
+        // GET: api/Airport/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AirportResponse>> GetAirport(int id)
+        {
+            var airport = await _context.Airports.FirstOrDefaultAsync(a => a.Id == id);
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!AirportExists(id))
+            if (airport == null)
             {
                 return NotFound();
             }
-            else
-            {
-                throw;
-            }
+
+            return HikoukiResponse.ToResponse(airport);
         }
 
-        return NoContent();
-    }
-
-    // POST: api/Airport
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public async Task<ActionResult<Airport>> PostAirport(Airport airport)
-    {
-        _context.Airports.Add(airport);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetAirport", new { id = airport.Id }, airport);
-    }
-
-    // DELETE: api/Airport/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAirport(int? id)
-    {
-        var airport = await _context.Airports.FindAsync(id);
-        if (airport == null)
+        // PUT: api/Airport/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutAirport(int id, CreateAirportRequest airport)
         {
-            return NotFound();
+            Airport? existingAirport = await _context.Airports.FindAsync(id);
+            if (existingAirport == null)
+            {
+                return NotFound();
+            }
+
+            existingAirport.Iata = airport.Iata;
+            existingAirport.Icao = airport.Icao;
+            existingAirport.Name = airport.Name;
+            existingAirport.AlternateName = airport.AlternateName;
+            existingAirport.Country = airport.Country;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
-        _context.Airports.Remove(airport);
-        await _context.SaveChangesAsync();
+        // POST: api/Airport
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<AirportResponse>> PostAirport(CreateAirportRequest airport)
+        {
+            Airport newAirport = new()
+            {
+                Iata = airport.Iata,
+                Icao = airport.Icao,
+                Name = airport.Name,
+                AlternateName = airport.AlternateName,
+                Country = airport.Country
+            };
 
-        return NoContent();
-    }
+            _context.Airports.Add(newAirport);
+            await _context.SaveChangesAsync();
 
-    private bool AirportExists(int? id)
-    {
-        return _context.Airports.Any(e => e.Id == id);
+            return CreatedAtAction("GetAirport", new { id = newAirport.Id }, HikoukiResponse.ToResponse(newAirport));
+        }
+
+        // DELETE: api/Airport/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAirport(int id)
+        {
+            var airport = await _context.Airports.FindAsync(id);
+            if (airport == null)
+            {
+                return NotFound();
+            }
+
+            _context.Airports.Remove(airport);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

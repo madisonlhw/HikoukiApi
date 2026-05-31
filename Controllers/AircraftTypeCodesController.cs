@@ -14,23 +14,24 @@ namespace HikoukiApi.Controllers
 
         // GET: api/AircraftTypeCode
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AircraftTypeCode>>> GetAircraftTypeCode()
+        public async Task<ActionResult<IEnumerable<AircraftTypeCodeResponse>>> GetAircraftTypeCode()
         {
-            return await _context.AircraftTypeCodes.ToListAsync();
+            var aircraftTypeCodes = await _context.AircraftTypeCodes.ToListAsync();
+            return aircraftTypeCodes.Select(HikoukiResponse.ToResponse).ToList();
         }
 
         // GET: api/AircraftTypeCode/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<AircraftTypeCode>> GetAircraftTypeCode(int id)
+        public async Task<ActionResult<AircraftTypeCodeResponse>> GetAircraftTypeCode(int id)
         {
-            var aircrafttypecode = await _context.AircraftTypeCodes.FindAsync(id);
+            var aircrafttypecode = await _context.AircraftTypeCodes.FirstOrDefaultAsync(a => a.Id == id);
 
             if (aircrafttypecode == null)
             {
                 return NotFound();
             }
 
-            return aircrafttypecode;
+            return HikoukiResponse.ToResponse(aircrafttypecode);
         }
 
         // PUT: api/AircraftTypeCode/5
@@ -54,17 +55,23 @@ namespace HikoukiApi.Controllers
         // POST: api/AircraftTypeCode
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<AircraftTypeCode>> PostAircraftTypeCode(AircraftTypeCode aircrafttypecode)
+        public async Task<ActionResult<AircraftTypeCodeResponse>> PostAircraftTypeCode(CreateAircraftTypeCodeRequest aircrafttypecode)
         {
-            _context.AircraftTypeCodes.Add(aircrafttypecode);
+            AircraftTypeCode newAircraftTypeCode = new()
+            {
+                Icao = aircrafttypecode.Icao,
+                Manufacturer = aircrafttypecode.Manufacturer
+            };
+
+            _context.AircraftTypeCodes.Add(newAircraftTypeCode);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAircraftTypeCode", new { id = aircrafttypecode.Id }, aircrafttypecode);
+            return CreatedAtAction("GetAircraftTypeCode", new { id = newAircraftTypeCode.Id }, HikoukiResponse.ToResponse(newAircraftTypeCode));
         }
 
         // DELETE: api/AircraftTypeCode/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAircraftTypeCode(int? id)
+        public async Task<IActionResult> DeleteAircraftTypeCode(int id)
         {
             var aircrafttypecode = await _context.AircraftTypeCodes.FindAsync(id);
             if (aircrafttypecode == null)
@@ -76,11 +83,6 @@ namespace HikoukiApi.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool AircraftTypeCodeExists(int? id)
-        {
-            return _context.AircraftTypeCodes.Any(e => e.Id == id);
         }
     }
 }

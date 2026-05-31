@@ -20,5 +20,6 @@
         public bool IsSpecialLivery { get; set; } = false;
         public string? SpecialLiveryName { get; set; }
         public string? Remarks { get; set; }
+        public ICollection<AircraftSpot> AircraftSpots { get; set; } = [];
     }
 }
