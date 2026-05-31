@@ -8,11 +8,11 @@
 GET {{HikoukiApi_HostAddress}}/aircraft
 Accept: application/json
 
-### Get one aircraft by id
+### Get one aircraft
 GET {{HikoukiApi_HostAddress}}/aircraft/1
 Accept: application/json
 
-### Create an aircraft (minimal — required fields only)
+### Create aircraft (minimal — required fields only)
 POST {{HikoukiApi_HostAddress}}/aircraft
 Content-Type: application/json
 
@@ -22,13 +22,13 @@ Content-Type: application/json
   "serialNumber": "12345"
 }
 
-### Create an aircraft (full — optional fields included)
+### Create aircraft (full)
 POST {{HikoukiApi_HostAddress}}/aircraft
 Content-Type: application/json
 
 {
   "registration": "N67890",
-  "aircraftTypeCodeId": 2,
+  "aircraftTypeCodeId": 1,
   "typeCodeVariantId": 1,
   "serialNumber": "67890",
   "lineNumber": "0420",
@@ -40,13 +40,13 @@ Content-Type: application/json
   "remarks": "Test airframe"
 }
 
-### Update an aircraft (full replace — send the whole editable set; no id in body)
-PUT {{HikoukiApi_HostAddress}}/aircraft/2
+### Update aircraft (full replace — no id in body)
+PUT {{HikoukiApi_HostAddress}}/aircraft/1
 Content-Type: application/json
 
 {
   "registration": "N12345",
-  "aircraftTypeCodeId": 3,
+  "aircraftTypeCodeId": 1,
   "typeCodeVariantId": null,
   "serialNumber": "12345",
   "lineNumber": null,
@@ -58,7 +58,7 @@ Content-Type: application/json
   "remarks": "Updated via PUT"
 }
 
-### Delete an aircraft
+### Delete aircraft
 DELETE {{HikoukiApi_HostAddress}}/aircraft/1
 
 
@@ -70,11 +70,11 @@ DELETE {{HikoukiApi_HostAddress}}/aircraft/1
 GET {{HikoukiApi_HostAddress}}/aircrafttypecodes
 Accept: application/json
 
-### Get one type code by id
+### Get one type code
 GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
 Accept: application/json
 
-### Create a type code
+### Create type code
 POST {{HikoukiApi_HostAddress}}/aircrafttypecodes
 Content-Type: application/json
 
@@ -83,17 +83,16 @@ Content-Type: application/json
   "manufacturer": "Boeing"
 }
 
-### Update a type code (this controller still binds the entity, so the body carries id)
+### Update type code
 PUT {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
 Content-Type: application/json
 
 {
-  "id": 1,
   "icao": "B738",
   "manufacturer": "Boeing"
 }
 
-### Delete a type code
+### Delete type code
 DELETE {{HikoukiApi_HostAddress}}/aircrafttypecodes/1
 
 
@@ -109,7 +108,7 @@ Accept: application/json
 GET {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
 Accept: application/json
 
-### Create a variant under a type code
+### Create variant
 POST {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants
 Content-Type: application/json
 
@@ -117,7 +116,7 @@ Content-Type: application/json
   "variantName": "800"
 }
 
-### Update a variant (id and parent come from the route, not the body)
+### Update variant
 PUT {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
 Content-Type: application/json
 
@@ -125,45 +124,142 @@ Content-Type: application/json
   "variantName": "800ER"
 }
 
-### Delete a variant
+### Delete variant
 DELETE {{HikoukiApi_HostAddress}}/aircrafttypecodes/1/variants/1
+
+
+###############################################
+# Aircraft spotting (nested under an aircraft)
+###############################################
+
+### List spots for an aircraft
+GET {{HikoukiApi_HostAddress}}/aircraft/1/spotting
+Accept: application/json
+
+### Get one spot
+GET {{HikoukiApi_HostAddress}}/aircraft/1/spotting/1
+Accept: application/json
+
+### Create spot (minimal — required fields only; aircraft comes from the route)
+POST {{HikoukiApi_HostAddress}}/aircraft/1/spotting
+Content-Type: application/json
+
+{
+  "date": "2025-05-30",
+  "airportLocation": "Approach to 28R",
+  "camera": "Canon R5",
+  "lens": "100-500mm"
+}
+
+### Create spot (full)
+POST {{HikoukiApi_HostAddress}}/aircraft/1/spotting
+Content-Type: application/json
+
+{
+  "date": "2025-05-30",
+  "typeCodeVariantId": 1,
+  "airlineId": 1,
+  "airportId": 1,
+  "airportLocation": "Approach to 28R",
+  "camera": "Canon R5",
+  "lens": "100-500mm",
+  "remarks": "Golden hour, special livery"
+}
+
+### Update spot (full replace — no aircraft id in body)
+PUT {{HikoukiApi_HostAddress}}/aircraft/1/spotting/1
+Content-Type: application/json
+
+{
+  "date": "2025-05-30",
+  "typeCodeVariantId": null,
+  "airlineId": null,
+  "airportId": null,
+  "airportLocation": "Gate B12",
+  "camera": "Canon R5",
+  "lens": "24-70mm",
+  "remarks": "Updated via PUT"
+}
+
+### Delete spot
+DELETE {{HikoukiApi_HostAddress}}/aircraft/1/spotting/1
+
 
 ###############################################
 # Airports
 ###############################################
 
-### Airports — list all
+### List all airports
 GET {{HikoukiApi_HostAddress}}/airports
 Accept: application/json
 
-### Airports — get one
+### Get one airport
 GET {{HikoukiApi_HostAddress}}/airports/1
 Accept: application/json
 
-### Airports — create
+### Create airport
 POST {{HikoukiApi_HostAddress}}/airports
 Content-Type: application/json
 
 {
-  "iata": "LCK",
-  "icao": "KLCK",
-  "name": "Rickenbacker International Airport",
+  "iata": "LAX",
+  "icao": "KLAX",
+  "name": "Los Angeles International Airport",
   "alternateName": null,
-  "country": "US"
+  "country": "United States"
 }
 
-### Airports — update
+### Update airport
 PUT {{HikoukiApi_HostAddress}}/airports/1
 Content-Type: application/json
 
 {
-  "id": 1,
-  "iata": "LCK",
-  "icao": "KLCK",
-  "name": "Rickenbacker Intl",
-  "alternateName": "Rickenbacker ANGB",
-  "country": "US"
+  "iata": "LAX",
+  "icao": "KLAX",
+  "name": "Los Angeles International Airport",
+  "alternateName": null,
+  "country": "United States"
 }
 
-### Airports — delete
+### Delete airport
 DELETE {{HikoukiApi_HostAddress}}/airports/1
+
+
+###############################################
+# Airlines
+###############################################
+
+### List all airlines
+GET {{HikoukiApi_HostAddress}}/airlines
+Accept: application/json
+
+### Get one airline
+GET {{HikoukiApi_HostAddress}}/airlines/1
+Accept: application/json
+
+### Create airline
+POST {{HikoukiApi_HostAddress}}/airlines
+Content-Type: application/json
+
+{
+  "iata": "AA",
+  "icao": "AAL",
+  "name": "American Airlines",
+  "country": "United States",
+  "isActive": true
+}
+
+### Update airline
+PUT {{HikoukiApi_HostAddress}}/airlines/1
+Content-Type: application/json
+
+{
+  "iata": "AA",
+  "icao": "AAL",
+  "name": "American Airlines",
+  "country": "United States",
+  "isActive": true
+}
+
+### Delete airline
+DELETE {{HikoukiApi_HostAddress}}/airlines/1
