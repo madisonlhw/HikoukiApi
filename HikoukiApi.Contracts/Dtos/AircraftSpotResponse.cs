@@ -1,6 +1,4 @@
-﻿using HikoukiApi.Models;
-
-namespace HikoukiApi.Dtos
+﻿namespace HikoukiApi.Dtos
 {
     public class AircraftSpotResponse
     {
